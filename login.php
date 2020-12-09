@@ -7,20 +7,19 @@ if (isset($_POST['registro'])) {
     exit;
 }
 
-if (isset($_POST['login'])) {
-    // TODO Apartado 5: Comprobar captcha
+if (isset($_POST['login']) && $_POST['captcha']==$_SESSION['CAPTCHA']) {
+
     include ("includes/abrirbd.php");
     $sql = "SELECT * FROM usuarios WHERE user ='{$_POST['user']}'";
     $resultado = mysqli_query($link, $sql);
 
     if (mysqli_num_rows($resultado) == 1) {
         $usuario = mysqli_fetch_assoc($resultado);
-        // TODO Apartado 4: Incorporar salt al hash
-        $hash = hash("sha256", $_POST['passwd'], false);
+        $hash = hash("sha256", $_POST['passwd'] . $usuario['salt'], false);
         if ($hash == $usuario['password']) {
             $_SESSION['autenticado'] = 'correcto';
             $_SESSION['user'] = $usuario['user'];
-            header("Location:MasterWeb.php");
+            header("Location: MasterWeb.php");
         } else {
             header("Location: NoAuth.php");
         }
@@ -54,6 +53,8 @@ if (isset($_POST['login'])) {
                     <td> <input type = password name ='passwd'></td>
                 </tr>
             </table><br>
+            <img src="captcha.php">
+            <input type=text name='captcha'><br><br>
             <input type=submit name = 'login' value = "LOGIN"><br><br><br>
             <input type=submit name = 'registro' value = "REGISTRAR USUARIO"> 
         </form>

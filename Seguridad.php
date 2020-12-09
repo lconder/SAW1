@@ -1,6 +1,6 @@
 <?php
 session_start();
-// TODO Apartado 3: Comprobar autenticación del usuario
+include "includes/autenticado.php";
 
 ?>
 <html>

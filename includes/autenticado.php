@@ -1,3 +1,5 @@
 <?php
-	// TODO Apartado 3: Comprobar si el usuario está autenticado 
-?>
+    if(!$_SESSION['autenticado']=='correcto') {
+        header('Location: NoAuth.php');
+        exit();
+    }

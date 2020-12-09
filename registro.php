@@ -1,7 +1,6 @@
 <?php
 session_start();
-if (isset($_POST['registro'])) {
-    // TODO Apartado 5: Comprobar captcha
+if (isset($_POST['registro']) && $_POST['captcha']==$_SESSION['CAPTCHA']) {
     include ("includes/abrirbd.php");
     $sql = "SELECT * FROM usuarios WHERE user ='{$_POST['user']}'";
     $resultado = mysqli_query($link, $sql);
@@ -11,9 +10,9 @@ if (isset($_POST['registro'])) {
         echo "<A href= '{$_SERVER['PHP_SELF']}'> Volver a registro </A>";
         echo "</Center></font>";
     } else {
-        // TODO Apartado 4: Incorporar salt al hash
-        $hash = hash("sha256", $_POST['passwd'] , false);
-        $sql = "INSERT INTO usuarios (user, password, salt, nombre, apellidos, permisos) VALUES ('{$_POST['user']}', '{$hash}', '','{$_POST['nombre']}', '{$_POST['apellidos']}','NNNNNNNNNN')";
+        $salt = time();
+        $hash = hash("sha256", $_POST['passwd'] . $salt , false);
+        $sql = "INSERT INTO usuarios (user, password, salt, nombre, apellidos, permisos) VALUES ('{$_POST['user']}', '{$hash}', '{$salt}','{$_POST['nombre']}', '{$_POST['apellidos']}','NNNNNNNNNN')";
         $resultado = mysqli_query($link, $sql);
 
         if (!$resultado) {
@@ -63,6 +62,8 @@ if (isset($_POST['registro'])) {
                     <td> <input type = text name = 'apellidos'></td>
                 </tr>
             </table><br>
+            <img src="captcha.php">
+            <input type=text name='captcha'><br><br>
             <input type=submit name = 'registro' value = "REGISTRO">
         </form>
         <br><br><A href= 'login.php'> Volver a login </A>
