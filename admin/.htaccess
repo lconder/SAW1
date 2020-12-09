@@ -1,0 +1,7 @@
+AuthType Basic
+AuthName "Restricted Files”
+AuthBasicProvider file
+AuthUserFile /Applications/XAMPP/conf/pass
+Require valid-user
+
+DirectoryIndex admin.html
