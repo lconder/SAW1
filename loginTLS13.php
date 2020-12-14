@@ -1,6 +1,22 @@
 <?php
 session_start();
 
+if($_SERVER['SSL_CLIENT_VERIFY'] != "SUCCESS") {
+    header("Location: NoAuth.php");
+    exit(0);
+} else {
+    include ("includes/abrirbd.php");
+    $sql = "SELECT * FROM usuarios WHERE user ='{$_SERVER['SSL_CLIENT_S_DN_CN']}'";
+    $resultado = mysqli_query($link, $sql);
+    if (mysqli_num_rows($resultado) == 1) {
+        $_SESSION['autenticado'] = 'correcto';
+        $_SESSION['user'] = $usuario['user'];
+        header("Location: MasterWeb.php");
+    } else {
+        header("Location: NoAuth.php");
+    }
+}
+
 if (isset($_POST['registro'])) {
     header("Location: registro.php");
     exit;
@@ -55,7 +71,6 @@ if ((isset($_POST['login']) && $_POST['captcha']==$_SESSION['CAPTCHA']))
             <img src="captcha.php">
             <input type=text name='captcha'><br><br>
             <input type=submit name = 'login' value = "LOGIN"><br><br><br>
-            <a href="AuthCert/loginCert.php">Autenticación con certificado</a><br><br>
             <input type=submit name = 'registro' value = "REGISTRAR USUARIO"> 
         </form>
     </center>
