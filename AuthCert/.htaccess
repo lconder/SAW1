@@ -1,3 +1,5 @@
-
+SSLVerifyClient require
+SSLVerifyDepth 3
+SSLOptions +StdEnvVars
 
 
